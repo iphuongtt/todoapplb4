@@ -17,20 +17,23 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Todo} from '../models';
-import {TodoRepository} from '../repositories';
+import { Todo } from '../models';
+import { TodoRepository } from '../repositories';
+import { GeocoderService } from '../services'
+import { inject } from '@loopback/core';
 
 export class TodoController {
   constructor(
     @repository(TodoRepository)
-    public todoRepository : TodoRepository,
-  ) {}
+    public todoRepository: TodoRepository,
+    @inject('services.GeocoderService') protected geoService: GeocoderService
+  ) { }
 
   @post('/todos', {
     responses: {
       '200': {
         description: 'Todo model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Todo)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Todo) } },
       },
     },
   })
@@ -38,12 +41,16 @@ export class TodoController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Todo, {exclude: ['id']}),
+          schema: getModelSchemaRef(Todo, { exclude: ['id'] }),
         },
       },
     })
     todo: Omit<Todo, 'id'>,
   ): Promise<Todo> {
+    if (todo.remindAtAddress) {
+      const geo = await this.geoService.geocode(todo.remindAtAddress)
+      todo.remindAtGeo = `${geo[0].x},${geo[0].x}`;
+    }
     return this.todoRepository.create(todo);
   }
 
@@ -51,7 +58,7 @@ export class TodoController {
     responses: {
       '200': {
         description: 'Todo model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -67,7 +74,7 @@ export class TodoController {
         description: 'Array of Todo model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Todo)},
+            schema: { type: 'array', items: getModelSchemaRef(Todo) },
           },
         },
       },
@@ -83,7 +90,7 @@ export class TodoController {
     responses: {
       '200': {
         description: 'Todo PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -91,7 +98,7 @@ export class TodoController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Todo, {partial: true}),
+          schema: getModelSchemaRef(Todo, { partial: true }),
         },
       },
     })
@@ -105,7 +112,7 @@ export class TodoController {
     responses: {
       '200': {
         description: 'Todo model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Todo)}},
+        content: { 'application/json': { schema: getModelSchemaRef(Todo) } },
       },
     },
   })
@@ -125,7 +132,7 @@ export class TodoController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Todo, {partial: true}),
+          schema: getModelSchemaRef(Todo, { partial: true }),
         },
       },
     })
