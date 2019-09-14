@@ -29,7 +29,7 @@ export class TodoList extends Entity {
 }
 
 export interface TodoListRelations {
-  todos: TodoWithRelations[]
+  todos?: TodoWithRelations[]
 }
 
 export type TodoListWithRelations = TodoList & TodoListRelations;

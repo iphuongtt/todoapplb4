@@ -17,20 +17,20 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {TodoList} from '../models';
-import {TodoListRepository} from '../repositories';
+import { TodoList } from '../models';
+import { TodoListRepository } from '../repositories';
 
 export class TodoListController {
   constructor(
     @repository(TodoListRepository)
-    public todoListRepository : TodoListRepository,
-  ) {}
+    public todoListRepository: TodoListRepository,
+  ) { }
 
   @post('/todo-list', {
     responses: {
       '200': {
         description: 'TodoList model instance',
-        content: {'application/json': {schema: getModelSchemaRef(TodoList)}},
+        content: { 'application/json': { schema: getModelSchemaRef(TodoList) } },
       },
     },
   })
@@ -38,7 +38,7 @@ export class TodoListController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(TodoList, {exclude: ['id']}),
+          schema: getModelSchemaRef(TodoList, { exclude: ['id'] }),
         },
       },
     })
@@ -51,7 +51,7 @@ export class TodoListController {
     responses: {
       '200': {
         description: 'TodoList model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -67,7 +67,7 @@ export class TodoListController {
         description: 'Array of TodoList model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(TodoList)},
+            schema: { type: 'array', items: getModelSchemaRef(TodoList) },
           },
         },
       },
@@ -83,7 +83,7 @@ export class TodoListController {
     responses: {
       '200': {
         description: 'TodoList PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
@@ -91,7 +91,7 @@ export class TodoListController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(TodoList, {partial: true}),
+          schema: getModelSchemaRef(TodoList, { partial: true }),
         },
       },
     })
@@ -105,7 +105,7 @@ export class TodoListController {
     responses: {
       '200': {
         description: 'TodoList model instance',
-        content: {'application/json': {schema: getModelSchemaRef(TodoList)}},
+        content: { 'application/json': { schema: getModelSchemaRef(TodoList) } },
       },
     },
   })
@@ -125,7 +125,7 @@ export class TodoListController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(TodoList, {partial: true}),
+          schema: getModelSchemaRef(TodoList, { partial: true }),
         },
       },
     })
